@@ -45,11 +45,11 @@ jobs:
     secrets: inherit
     with:
       environment: test
-      image-name: $IMAGE_NAME
+      image-name: ${{ env.IMAGE_NAME }}
   deploy-TH-test:
     needs: build-artifact
     uses: ./.github/workflows/deploy-th.yml
     secrets: inherit
     with:
       environment: test
-      image-name: $IMAGE_NAME
+      image-name: ${{ env.IMAGE_NAME }}
