@@ -2,13 +2,11 @@ name: Deploy VN test
 
 on:
   workflow_call:
-    secrets: inherit
-
+    
 jobs:
   deploy-VN:
     runs-on: ubuntu-latest
     name: Deploy to test
-    needs: build-artifact
     env:
       IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/test:${{ github.head_ref }}
       SOME_CONFIG: "this is vietnam config"

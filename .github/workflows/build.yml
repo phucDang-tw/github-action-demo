@@ -40,9 +40,11 @@ jobs:
   deploy-VN:
     needs: build-artifact
     uses: ./.github/workflows/deploy-vn-test.yml
+    secrets: inherit
   deploy-TH:
     needs: build-artifact
     uses: ./.github/workflows/deploy-th-test.yml
+    secrets: inherit
   deploy-all-testing:
     runs-on: ubuntu-latest
     name: Deploy to test
