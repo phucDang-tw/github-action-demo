@@ -1,16 +1,8 @@
 name: Deploy VN test
 
 on:
-  pull_request:
-
   workflow_call:
-    inputs:
-      config-path:
-        required: true
-        type: string
-    secrets:
-      token:
-        required: true
+    secrets: inherit
 
 jobs:
   deploy-VN:
