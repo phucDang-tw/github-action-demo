@@ -50,11 +50,11 @@ jobs:
     name: Deploy to test
     needs: build-artifact
     if: startsWith(github.head_ref, 'ALL-')
+    secrets: inherit
+
     steps:
       - name: Deploy to TH
         uses: ./.github/workflows/deploy-th-test.yml
-        secrets: inherit
       - name: Deploy to VN
         uses: ./.github/workflows/deploy-vn-test.yml
-        secrets: inherit
 
