@@ -38,9 +38,9 @@ jobs:
       - name: Push Docker image
         run: docker push $IMAGE_NAME
   deploy-VN:
-    uses: ./github/workflows/deploy-vn-test.yml
+    uses: ./.github/workflows/deploy-vn-test.yml
   deploy-TH:
-    uses: ./github/workflows/deploy-th-test.yml
+    uses: ./.github/workflows/deploy-th-test.yml
   deploy-all-testing:
     runs-on: ubuntu-latest
     name: Deploy to test
