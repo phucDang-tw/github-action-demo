@@ -37,46 +37,12 @@ jobs:
         run: docker build . -t $IMAGE_NAME
       - name: Push Docker image
         run: docker push $IMAGE_NAME
-  deploy-VN:
-    runs-on: ubuntu-latest
-    name: Deploy to test
-    needs: build-artifact
-    env:
-      IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/test:${{ github.head_ref }}
-      SOME_CONFIG: "this is vietnam config"
-    if: startsWith(github.head_ref, 'VN-')
-    steps:
-      - name: Login
-        uses: google-github-actions/setup-gcloud@v0
-        with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          service_account_email: ${{ secrets.GCP_EMAIL }}
-          service_account_key: ${{ secrets.GCP_CREDENTIALS }}
-      - name: Deploy Docker image
-        run: |
-          gcloud run deploy vn-test-server --image $IMAGE_NAME --region asia-southeast1 --platform managed \
-              --set-env-vars=SOME_CONFIG="${{ env.SOME_CONFIG }}",SAME_SECRET="${{ secrets.SAME_SECRET }}",SOME_SECRET="${{ secrets.VN_SECRET }}" \
-               --allow-unauthenticated
+  
   deploy-TH:
-    runs-on: ubuntu-latest
-    name: Deploy to test
-    needs: build-artifact
-    env:
-      IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/test:${{ github.head_ref }}
-      SOME_CONFIG: "this is thailand config"
-    if: startsWith(github.head_ref, 'TH-')
-    steps:
-      - name: Login
-        uses: google-github-actions/setup-gcloud@v0
-        with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          service_account_email: ${{ secrets.GCP_EMAIL }}
-          service_account_key: ${{ secrets.GCP_CREDENTIALS }}
-      - name: Deploy Docker image
-        run: |
-          gcloud run deploy th-test-server --image $IMAGE_NAME --region asia-southeast1 --platform managed \
-              --set-env-vars=SOME_CONFIG="${{ env.SOME_CONFIG }}",SAME_SECRET="${{ secrets.SAME_SECRET }}",SOME_SECRET="${{ secrets.TH_SECRET }}" \
-               --allow-unauthenticated
+    uses: ./.github/workflows/deploy-th-test.yml
+
+  deploy-VN:
+    uses: ./.github/workflows/deploy-vn-test.yml
   deploy-all-testing:
     runs-on: ubuntu-latest
     name: Deploy to test
