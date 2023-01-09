@@ -16,7 +16,6 @@ jobs:
     env:
       IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/server:${{ inputs.image-tag }}
       SOME_CONFIG: "this is vietnam config"
-    if: startsWith(github.head_ref, 'VN-') || startsWith(github.head_ref, 'ALL-')
     steps:
       - name: Login
         uses: google-github-actions/setup-gcloud@v0

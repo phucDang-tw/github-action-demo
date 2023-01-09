@@ -41,6 +41,7 @@ jobs:
         run: docker push $IMAGE_NAME
   deploy-VN-test:
     needs: build-artifact
+    if: startsWith(github.head_ref, 'VN-') || startsWith(github.head_ref, 'ALL-')
     uses: ./.github/workflows/deploy-vn.yml
     secrets: inherit
     with:
@@ -48,6 +49,7 @@ jobs:
       image-tag: ${{ github.head_ref }}
   deploy-TH-test:
     needs: build-artifact
+    if: startsWith(github.head_ref, 'TH-') || startsWith(github.head_ref, 'ALL-')
     uses: ./.github/workflows/deploy-th.yml
     secrets: inherit
     with:

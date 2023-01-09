@@ -25,7 +25,7 @@ jobs:
         run: docker tag $IMAGE_BASE:$GITHUB_SHA $IMAGE_BASE:$IMAGE_VERSION
       - name: Push Docker image
         run: docker push $IMAGE_BASE:$IMAGE_VERSION
-  deploy-to-prod:
+  deploy-to-TH-prod:
     uses: ./.github/workflows/deploy-th.yml
     secrets: inherit
     needs: retag-image
