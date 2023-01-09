@@ -30,6 +30,6 @@ jobs:
     uses: ./.github/workflows/deploy-th.yml
     secrets: inherit
     inputs:
-      - environment: uat
-        image-name: $IMAGE_NAME
+      environment: uat
+      image-name: $IMAGE_NAME
         
