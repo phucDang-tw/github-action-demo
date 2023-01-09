@@ -1,0 +1,25 @@
+name: deploy to uat
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - main
+jobs:
+  deploy-to-uat:
+    runs-on: ubuntu-latest
+    env:
+      IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/test:${{ github.head_ref }}
+      SOME_CONFIG: "this is thailand config"
+    steps:
+      - name: branch name
+        run: |
+          echo "Pull Request"
+          echo echo ${{ github.event.pull_request }}
+          echo "Github Ref"
+          echo ${{ github.ref }}
+          echo "Github Ref name"
+          echo ${{ github.ref_name }}
+          echo "Github Head Ref"
+          echo ${{ github.head_ref }}
+        
