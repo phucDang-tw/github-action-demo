@@ -31,5 +31,5 @@ jobs:
     secrets: inherit
     inputs:
       - environment: uat
-      - image-name: $IMAGE_NAME
+        image-name: $IMAGE_NAME
         
