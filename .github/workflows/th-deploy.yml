@@ -4,6 +4,7 @@ on: [pull_request]
 
 jobs:
   deploy-VN:
+    runs-on: ubuntu-latest
     name: Deploy to test
     needs: build-artifact
     env:
