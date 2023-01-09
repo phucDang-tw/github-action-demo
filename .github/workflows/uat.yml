@@ -5,21 +5,31 @@ on:
       - closed
     branches:
       - main
+env:
+  IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/server:${{ github.head_ref }}
+
 jobs:
-  deploy-to-uat:
+  retag-image:
     runs-on: ubuntu-latest
-    env:
-      IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/test:${{ github.head_ref }}
-      SOME_CONFIG: "this is thailand config"
     steps:
-      - name: branch name
-        run: |
-          echo "Pull Request"
-          echo echo ${{ github.event.pull_request }}
-          echo "Github Ref"
-          echo ${{ github.ref }}
-          echo "Github Ref name"
-          echo ${{ github.ref_name }}
-          echo "Github Head Ref"
-          echo ${{ github.head_ref }}
+      - name: Login
+        uses: google-github-actions/setup-gcloud@v0
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_email: ${{ secrets.GCP_EMAIL }}
+          service_account_key: ${{ secrets.GCP_CREDENTIALS }}
+      - name: Configure Docker
+        run: gcloud auth configure-docker --quiet
+      - name: Pull Docker image
+        run: docker pull $IMAGE_NAME
+      - name: Retag docker image
+        run: docker tag $IMAGE_NAME gcr.io/${{ secrets.GCP_PROJECT_ID }}/server:uat
+      - name: Push Docker image
+        run: docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/server:uat
+  deploy-to-uat:
+    uses: ./.github/workflows/deploy-th-test.yml
+    secrets: inherit
+    inputs:
+      - environment: uat
+      - image-name: $IMAGE_NAME
         

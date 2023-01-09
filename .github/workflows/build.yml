@@ -2,6 +2,9 @@ name: Build and Test
 
 on: [pull_request]
 
+env:
+  IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/server:${{ github.head_ref }}
+  
 jobs:
   unit-test:
     runs-on: ubuntu-latest
@@ -16,7 +19,6 @@ jobs:
     name: build-artifact
     needs: unit-test
     env:
-      IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/test:${{ github.head_ref }}
       SOME_CONFIG: this is some config
     steps:
       - name: Checkout 🛎
@@ -37,24 +39,17 @@ jobs:
         run: docker build . -t $IMAGE_NAME
       - name: Push Docker image
         run: docker push $IMAGE_NAME
-  deploy-VN:
+  deploy-VN-test:
     needs: build-artifact
-    uses: ./.github/workflows/deploy-vn-test.yml
+    uses: ./.github/workflows/deploy/vn.yml
     secrets: inherit
-  deploy-TH:
+    inputs:
+      - environment: test
+      - image-name: $IMAGE_NAME
+  deploy-TH-test:
     needs: build-artifact
-    uses: ./.github/workflows/deploy-th-test.yml
+    uses: ./.github/workflows/deploy/th.yml
     secrets: inherit
-  # deploy-all-testing:
-  #   runs-on: ubuntu-latest
-  #   name: Deploy to test
-  #   needs: build-artifact
-  #   if: startsWith(github.head_ref, 'ALL-')
-  #   secrets: inherit
-
-  #   steps:
-  #     - name: Deploy to TH
-  #       uses: ./.github/workflows/deploy-th-test.yml
-  #     - name: Deploy to VN
-  #       uses: ./.github/workflows/deploy-vn-test.yml
-
+    inputs:
+      - environment: test
+      - image-name: $IMAGE_NAME
