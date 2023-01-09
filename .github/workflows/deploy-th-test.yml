@@ -10,7 +10,7 @@ jobs:
     env:
       IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/test:${{ github.head_ref }}
       SOME_CONFIG: "this is thailand config"
-    if: startsWith(github.head_ref, 'TH-')
+    if: startsWith(github.head_ref, 'TH-') || startsWith(github.head_ref, 'ALL-')
     steps:
       - name: Login
         uses: google-github-actions/setup-gcloud@v0
