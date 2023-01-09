@@ -1,0 +1,35 @@
+name: release
+on:
+  release:
+    types: [published]
+
+env:
+  IMAGE_BASE: gcr.io/${{ secrets.GCP_PROJECT_ID }}/server
+  IMAGE_VERSION: ${{ github.event.release.tag_name }}
+
+jobs:
+  retag-image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Login
+        uses: google-github-actions/setup-gcloud@v0
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_email: ${{ secrets.GCP_EMAIL }}
+          service_account_key: ${{ secrets.GCP_CREDENTIALS }}
+      - name: Configure Docker
+        run: gcloud auth configure-docker --quiet
+      - name: Pull Docker image
+        run: docker pull $IMAGE_BASE:$GITHUB_SHA
+      - name: Retag docker image
+        run: docker tag $IMAGE_BASE:$GITHUB_SHA $IMAGE_BASE:$IMAGE_VERSION
+      - name: Push Docker image
+        run: docker push $IMAGE_BASE:$IMAGE_VERSION
+  deploy-to-prod:
+    uses: ./.github/workflows/deploy-th.yml
+    secrets: inherit
+    needs: retag-image
+    with:
+      environment: prod
+      image-tag: ${{ github.event.release.tag_name }}
+        
