@@ -1,0 +1,38 @@
+name: Build and Test
+
+on: [pull_request]
+
+jobs:
+  unit-test:
+    name: unit-test
+    steps:
+      - name: Checkout 🛎
+        uses: actions/checkout@v3
+      - name: Unit Test
+        run: echo "Running unit-test"
+  build-artifact:
+    name: build-artifact
+    needs: unit-test
+    env:
+      IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/test:${GITHUB_REF##*/}
+      SOME_CONFIG: this is some config
+    steps:
+      - name: Checkout 🛎
+        uses: actions/checkout@v3
+      - name: Setup node env 🏗
+        uses: actions/setup-node@v2
+        with:
+          node-version: "16"
+          cache: "npm"
+      - name: Login
+        uses: google-github-actions/setup-gcloud@v0
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_email: ${{ secrets.GCP_EMAIL }}
+          service_account_key: ${{ secrets.GCP_CREDENTIALS }}
+      - name: Configure Docker
+        run: gcloud auth configure-docker --quiet
+      - name: Build Docker image
+        run: docker build . -t $IMAGE_NAME
+      - name: Push Docker image
+        run: docker push $IMAGE_NAME

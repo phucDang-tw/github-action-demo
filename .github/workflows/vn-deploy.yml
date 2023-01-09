@@ -1,0 +1,18 @@
+name: Deploy to VN
+
+on: [pull_request]
+
+jobs:
+  deploy-VN:
+    name: Deploy to test
+    needs: build-artifact
+    env:
+      IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/test:${GITHUB_REF##*/}
+      SOME_CONFIG: this is vietnam config
+    if: startsWith(github.ref, 'refs/tags/VN-')
+    steps:
+      - name: Deploy Docker image
+        run: |
+          gcloud run deploy vn-test-server --image $IMAGE_NAME --region asia-southeast1 --platform managed \
+              --set-env-vars=SOME_CONFIG=${{ env.SOME_CONFIG }},SAME_SECRET=${{ secrets.SAME_SECRET }},SOME_SECRET=${{ secrets.VN_SECRET }} \
+               --allow-unauthenticated
