@@ -16,7 +16,7 @@ jobs:
     name: build-artifact
     needs: unit-test
     env:
-      IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/test:${GITHUB_REF##*/}
+      IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/test:$(echo ${GITHUB_REF#refs/heads/})
       SOME_CONFIG: this is some config
     steps:
       - name: Checkout 🛎
@@ -42,7 +42,7 @@ jobs:
     name: Deploy to test
     needs: build-artifact
     env:
-      IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/test:${GITHUB_REF##*/}
+      IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/test:$(echo ${GITHUB_REF#refs/heads/})
       SOME_CONFIG: this is vietnam config
     if: startsWith(github.ref, 'refs/tags/VN-')
     steps:
@@ -56,7 +56,7 @@ jobs:
     name: Deploy to test
     needs: build-artifact
     env:
-      IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/test:${GITHUB_REF##*/}
+      IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/test:$(echo ${GITHUB_REF#refs/heads/})
       SOME_CONFIG: this is thailand config
     if: startsWith(github.ref, 'refs/tags/TH-')
     steps:
