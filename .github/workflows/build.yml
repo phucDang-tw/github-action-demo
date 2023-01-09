@@ -46,6 +46,12 @@ jobs:
       SOME_CONFIG: "this is vietnam config"
     if: startsWith(github.head_ref, 'VN-')
     steps:
+      - name: Login
+        uses: google-github-actions/setup-gcloud@v0
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_email: ${{ secrets.GCP_EMAIL }}
+          service_account_key: ${{ secrets.GCP_CREDENTIALS }}
       - name: Deploy Docker image
         run: |
           gcloud run deploy vn-test-server --image $IMAGE_NAME --region asia-southeast1 --platform managed \
@@ -60,6 +66,12 @@ jobs:
       SOME_CONFIG: "this is thailand config"
     if: startsWith(github.head_ref, 'TH-')
     steps:
+      - name: Login
+        uses: google-github-actions/setup-gcloud@v0
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_email: ${{ secrets.GCP_EMAIL }}
+          service_account_key: ${{ secrets.GCP_CREDENTIALS }}
       - name: Deploy Docker image
         run: |
           gcloud run deploy th-test-server --image $IMAGE_NAME --region asia-southeast1 --platform managed \
