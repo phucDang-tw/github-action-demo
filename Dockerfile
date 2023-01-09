@@ -1,4 +1,4 @@
-FROM node:alpine-lts
+FROM node:lts-alpine
 
 COPY server.js server.js
 
