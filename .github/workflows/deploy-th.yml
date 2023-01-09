@@ -1,6 +1,13 @@
 name: Deploy TH test
 
 on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        required: true
+        default: 'test'
+      image-tag:
+        required: true
   workflow_call:
     inputs:
       environment:
