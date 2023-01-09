@@ -4,6 +4,7 @@ on: [pull_request]
 
 jobs:
   unit-test:
+    runs-on: ubuntu-latest
     name: unit-test
     steps:
       - name: Checkout 🛎
@@ -11,6 +12,7 @@ jobs:
       - name: Unit Test
         run: echo "Running unit-test"
   build-artifact:
+    runs-on: ubuntu-latest
     name: build-artifact
     needs: unit-test
     env:
