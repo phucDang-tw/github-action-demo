@@ -1,6 +1,9 @@
 name: Build and Test
 
 on: [pull_request]
+
+env:
+  IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/server:${{ github.head_ref }}
   
 jobs:
   unit-test:
@@ -42,11 +45,11 @@ jobs:
     secrets: inherit
     with:
       environment: test
-      image-name: gcr.io/${{ secrets.GCP_PROJECT_ID }}/server:${{ github.head_ref }}
+      image-tag: test
   deploy-TH-test:
     needs: build-artifact
     uses: ./.github/workflows/deploy-th.yml
     secrets: inherit
     with:
       environment: test
-      image-name: gcr.io/${{ secrets.GCP_PROJECT_ID }}/server:${{ github.head_ref }}
+      image-tag: test

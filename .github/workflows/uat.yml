@@ -29,7 +29,8 @@ jobs:
   deploy-to-uat:
     uses: ./.github/workflows/deploy-th.yml
     secrets: inherit
+    depends-on: retag-image
     with:
       environment: uat
-      image-name: $IMAGE_NAME
+      image-tag: uat
         
