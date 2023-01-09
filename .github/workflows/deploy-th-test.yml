@@ -1,17 +1,8 @@
-name: Deploy to Thai Testing
+name: Deploy TH test
 
-on: 
-  pull_request:
-
+on:
   workflow_call:
-    inputs:
-      config-path:
-        required: true
-        type: string
-    secrets:
-      token:
-        required: true
-
+    secrets: inherit
 
 jobs:
   deploy-TH:
