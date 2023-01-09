@@ -38,8 +38,10 @@ jobs:
       - name: Push Docker image
         run: docker push $IMAGE_NAME
   deploy-VN:
+    needs: build-artifact
     uses: ./.github/workflows/deploy-vn-test.yml
   deploy-TH:
+    needs: build-artifact
     uses: ./.github/workflows/deploy-th-test.yml
   deploy-all-testing:
     runs-on: ubuntu-latest
