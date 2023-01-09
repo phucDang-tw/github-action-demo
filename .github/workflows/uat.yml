@@ -27,7 +27,7 @@ jobs:
       - name: Push Docker image
         run: docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/server:uat
   deploy-to-uat:
-    uses: ./.github/workflows/deploy-th-test.yml
+    uses: ./.github/workflows/deploy-th.yml
     secrets: inherit
     inputs:
       - environment: uat
