@@ -43,13 +43,13 @@ jobs:
     needs: build-artifact
     env:
       IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/test:${{ github.head_ref }}
-      SOME_CONFIG: this is vietnam config
+      SOME_CONFIG: "this is vietnam config"
     if: startsWith(github.head_ref, 'VN-')
     steps:
       - name: Deploy Docker image
         run: |
           gcloud run deploy vn-test-server --image $IMAGE_NAME --region asia-southeast1 --platform managed \
-              --set-env-vars=SOME_CONFIG=${{ env.SOME_CONFIG }},SAME_SECRET=${{ secrets.SAME_SECRET }},SOME_SECRET=${{ secrets.VN_SECRET }} \
+              --set-env-vars=SOME_CONFIG=${{ env.SOME_CONFIG }},SAME_SECRET="${{ secrets.SAME_SECRET }}",SOME_SECRET="${{ secrets.VN_SECRET }}" \
                --allow-unauthenticated
   deploy-TH:
     runs-on: ubuntu-latest
@@ -57,11 +57,11 @@ jobs:
     needs: build-artifact
     env:
       IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/test:${{ github.head_ref }}
-      SOME_CONFIG: this is thailand config
+      SOME_CONFIG: "this is thailand config"
     if: startsWith(github.head_ref, 'TH-')
     steps:
       - name: Deploy Docker image
         run: |
           gcloud run deploy th-test-server --image $IMAGE_NAME --region asia-southeast1 --platform managed \
-              --set-env-vars=SOME_CONFIG=${{ env.SOME_CONFIG }},SAME_SECRET=${{ secrets.SAME_SECRET }},SOME_SECRET=${{ secrets.TH_SECRET }} \
+              --set-env-vars=SOME_CONFIG=${{ env.SOME_CONFIG }},SAME_SECRET="${{ secrets.SAME_SECRET }}",SOME_SECRET="${{ secrets.TH_SECRET }}" \
                --allow-unauthenticated
