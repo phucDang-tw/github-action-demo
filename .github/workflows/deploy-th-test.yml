@@ -2,7 +2,6 @@ name: Deploy TH test
 
 on:
   workflow_call:
-    secrets: inherit
 
 jobs:
   deploy-TH:

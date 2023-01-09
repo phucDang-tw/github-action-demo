@@ -2,8 +2,7 @@ name: Deploy VN test
 
 on:
   workflow_call:
-    secrets: inherit
-
+    
 jobs:
   deploy-VN:
     runs-on: ubuntu-latest
