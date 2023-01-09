@@ -16,7 +16,6 @@ jobs:
     name: build-artifact
     needs: unit-test
     env:
-      IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/test:${{ github.ref_name }}
       SOME_CONFIG: this is some config
     steps:
       - name: Checkout 🛎
@@ -25,6 +24,10 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: "16"
+      - name: Create image name
+        id: extract_branch
+        shell: bash
+        run: echo "##[set-output name=image_name;]$(echo gcr.io/${{ secrets.GCP_PROJECT_ID }}/test:${GITHUB_REF#refs/heads/})"
       - name: Login
         uses: google-github-actions/setup-gcloud@v0
         with:
@@ -34,21 +37,24 @@ jobs:
       - name: Configure Docker
         run: gcloud auth configure-docker --quiet
       - name: Build Docker image
-        run: docker build . -t $IMAGE_NAME
+        run: docker build . -t ${{ steps.extract_branch.outputs.image_name }}
       - name: Push Docker image
-        run: docker push $IMAGE_NAME
+        run: docker push ${{ steps.extract_branch.outputs.image_name }}
   deploy-VN:
     runs-on: ubuntu-latest
     name: Deploy to test
     needs: build-artifact
     env:
-      IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/test:${{ github.ref_name }}
       SOME_CONFIG: this is vietnam config
     if: startsWith(github.ref, 'refs/tags/VN-')
     steps:
+      - name: Create image name
+        id: extract_branch
+        shell: bash
+        run: echo "##[set-output name=image_name;]$(echo gcr.io/${{ secrets.GCP_PROJECT_ID }}/test:${GITHUB_REF#refs/heads/})"
       - name: Deploy Docker image
         run: |
-          gcloud run deploy vn-test-server --image $IMAGE_NAME --region asia-southeast1 --platform managed \
+          gcloud run deploy vn-test-server --image ${{ steps.extract_branch.outputs.image_name }} --region asia-southeast1 --platform managed \
               --set-env-vars=SOME_CONFIG=${{ env.SOME_CONFIG }},SAME_SECRET=${{ secrets.SAME_SECRET }},SOME_SECRET=${{ secrets.VN_SECRET }} \
                --allow-unauthenticated
   deploy-TH:
@@ -60,8 +66,12 @@ jobs:
       SOME_CONFIG: this is thailand config
     if: startsWith(github.ref, 'refs/tags/TH-')
     steps:
+      - name: Create image name
+        id: extract_branch
+        shell: bash
+        run: echo "##[set-output name=image_name;]$(echo gcr.io/${{ secrets.GCP_PROJECT_ID }}/test:${GITHUB_REF#refs/heads/})"
       - name: Deploy Docker image
         run: |
-          gcloud run deploy th-test-server --image $IMAGE_NAME --region asia-southeast1 --platform managed \
+          gcloud run deploy th-test-server --image ${{ steps.extract_branch.outputs.image_name }} --region asia-southeast1 --platform managed \
               --set-env-vars=SOME_CONFIG=${{ env.SOME_CONFIG }},SAME_SECRET=${{ secrets.SAME_SECRET }},SOME_SECRET=${{ secrets.TH_SECRET }} \
                --allow-unauthenticated
