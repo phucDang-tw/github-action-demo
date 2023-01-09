@@ -43,13 +43,13 @@ jobs:
     needs: build-artifact
     uses: ./.github/workflows/deploy-vn.yml
     secrets: inherit
-    inputs:
+    with:
       environment: test
       image-name: $IMAGE_NAME
   deploy-TH-test:
     needs: build-artifact
     uses: ./.github/workflows/deploy-th.yml
     secrets: inherit
-    inputs:
+    with:
       environment: test
       image-name: $IMAGE_NAME

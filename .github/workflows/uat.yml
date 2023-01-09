@@ -29,7 +29,7 @@ jobs:
   deploy-to-uat:
     uses: ./.github/workflows/deploy-th.yml
     secrets: inherit
-    inputs:
+    with:
       environment: uat
       image-name: $IMAGE_NAME
         
