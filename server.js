@@ -7,6 +7,7 @@ http
     res.write(`
   ${process.env.SOME_CONFIG}
   ${process.env.SOME_SECRET}
+  ${process.env.SAME_SECRET}
   `); //write a response to the client
     res.end(); //end the response
   })
